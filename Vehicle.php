@@ -1,6 +1,9 @@
 <?php
 
-class Vehicle {
+namespace App;
+
+class Vehicle
+{
 
     private $model;
 
@@ -9,11 +12,8 @@ class Vehicle {
         $this->model  = $model;
     }
 
-    public function getModel(){
+    public function getModel()
+    {
         return $this->model;
     }
 }
-
-$toyotaCar = new Vehicle('Toyota', 'Camry');
-
-$toyotaCar->getModel();

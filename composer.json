@@ -1,0 +1,12 @@
+{
+    "name": "atunje/git-sandbox",
+    "authors": [
+        {
+            "name": "Atunje",
+            "email": "atunje_afolabi@yahoo.com"
+        }
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*"
+    }
+}
