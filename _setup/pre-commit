@@ -1,0 +1,55 @@
+#!/bin/sh
+
+PROJECT=`php -r "echo dirname(dirname(dirname(realpath('$0'))));"`
+# grep -E '\.php |\.php$'  will also work
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep '.php\>'`
+
+# Usually this pre-commit will be executed automatically when commiting 
+# normally with git commit -m "commit message"
+#
+# But if the pre-commit is run manually with the command .git/hooks/pre-commit
+# and Vehicle.php is passed as an argument e.g .git/hooks/pre-commit vehicle.php
+# then $# will be equal to one which will execute the if statement below.
+# $# is the number of arguments passed to this script
+
+if [ "$#" -eq 1 ]
+then
+	oIFS=$IFS
+	IFS='
+	'
+	SFILES=$*
+	IFS=$oIFS
+fi
+
+# ${SFILES:-$STAGED_FILES_CMD} Use SFILES if set, but if not set then use the value $STAGED_FILES_CMD
+# Just like in php ternary opertaor : $var1 ?: $var2
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+echo $SFILES
+
+echo "Checking PHP Lint..."
+
+for FILE in $SFILES
+do
+	php -l -d display_errors=0 $PROJECT/$FILE
+	if [ $? != 0 ]
+	then
+		echo "Fix the error before commit."
+		exit 1
+	fi
+	FILES="$FILES $PROJECT/$FILE"	# concatenation of file
+done
+
+if [ "$FILES" != "" ]
+then
+	echo "Running Code Sniffer..."
+	./vendor/bin/phpcs $FILES
+	if [ $? != 0 ]
+	then
+		echo "Fix the error before commit."
+		exit 1
+	fi
+fi
+
+exit $?
+

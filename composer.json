@@ -8,5 +8,13 @@
     ],
     "require-dev": {
         "squizlabs/php_codesniffer": "3.*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "bash _setup/setup.sh"
+        ],
+        "post-update-cmd": [
+            "bash _setup/setup.sh"
+        ]
     }
 }
